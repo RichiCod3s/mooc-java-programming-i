@@ -53,7 +53,7 @@ public class Searching {
        }
         return -1;
     }
-
+    // HAS TO BE ORDERED TO WORK
     public static int binarySearch(ArrayList<Book> books, long searchedId) {
           
         int begin=0;

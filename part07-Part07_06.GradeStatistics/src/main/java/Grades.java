@@ -10,11 +10,15 @@ public class Grades {
     public Grades() {
         this.scanner = new Scanner(System.in);
         grades = new ArrayList<>();
-        getPoints();
+       ui();
+    }
+    
+    public void ui(){
+         getPoints();
         pointAverages();
         percentagePassed();
         countStars();
-        //gradeGraph();
+        gradeGraph(countStars());
     }
 
     public void getPoints() {
@@ -71,60 +75,41 @@ public class Grades {
         System.out.println("Pass percentage: " + percentagePassed);
     }
 
-    public void gradeGraph() {
-          System.out.println("Grade distribution:");
-
-    
-
-    for (int i = 5; i >= 0; i--) {
+    public void gradeGraph(int[] countStars) {
+        System.out.println("Grade distribution:");
+        
+       for (int i = 5; i >= 0; i--) {
         System.out.print(i + ": ");
-        for (int grade : grades) {
-            if (grade >= gradeCutoffs[i]) {
-                System.out.print("*");
-            }
+        for (int j = 0; j < countStars[i]; j++) {
+            System.out.print("*");
         }
-        System.out.println();
+        System.out.println(); // Move to the next line after printing stars for the current category
     }
+     
     }
-    public void countStars(){
-        //int[] gradeCutoffs = {50, 60, 70, 80, 90, 100};
-     // try and arraylist
-    }
-}
-/* public void pointAverages() {
-        int totalPoints = 0;
-        int numOfPoints = 0;
-        int totalPointsPass=0;
-        int numOfPointsPass=0;
-        
-        while (true) {
-            System.out.println("Enter in points (-1 to stop)");
-            int point = scanner.nextInt();
-            if (point == -1) {
-                break;
-            }
 
-            if (point >= 0 && point <= 100) {
-                totalPoints += point;
-                numOfPoints++;
-                if(point>=50){
-                    totalPointsPass +=point;
-                    numOfPointsPass++;
-                }
+    public int[] countStars() {
+        int[] stars = {0, 0, 0, 0, 0, 0};
+        int[] gradeLimit = {50, 60, 70, 80, 90, 100};
+
+        for (int grade : grades) {
+            if (grade < gradeLimit[0]) {
+                stars[0]++;
+            } else if (grade < gradeLimit[1]) {
+                stars[1]++;
+            } else if (grade < gradeLimit[2]) {
+                stars[2]++;
+            } else if (grade < gradeLimit[3]) {
+                stars[3]++;
+            } else if (grade < gradeLimit[4]) {
+                stars[4]++;
+            } else {
+                stars[5]++;
             }
         }
-        double averageAll = (double) totalPoints / numOfPoints;
-       double averagePass = (double) totalPointsPass/ numOfPointsPass;
-       double percentagePassed = ((double)numOfPointsPass/numOfPoints)*100;
-       
-        System.out.println("Point average (all): "+ averageAll);
-        
-        if(numOfPointsPass ==0){
-            System.out.println("Point average (pass): - ");
-        }else{
-        System.out.println("Point average (pass): "+ averagePass);
-        }
-        
-        System.out.println("Pass percentage: " + percentagePassed );
+        return stars;
+    
+     
     }
- */
+
+}

@@ -6,8 +6,7 @@ public class IsItInTheFile {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-
-        System.out.println("Name of the file:");
+        System.out.println("Name of the file:");   // two files: names.txt and other-names.txt.
         String file = scanner.nextLine();
         boolean found = false;
 

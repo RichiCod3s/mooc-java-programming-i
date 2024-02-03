@@ -12,7 +12,7 @@ public class SportStatistics {
         int losses=0;
                
         System.out.println("File:");
-        String file = scan.nextLine();
+        String file = scan.nextLine(); // data.csv
         
         try(Scanner scanner = new Scanner(Paths.get(file))){
             System.out.println("Team:");

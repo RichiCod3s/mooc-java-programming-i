@@ -5,10 +5,11 @@ import java.util.Scanner;
 public class NumbersFromAFile {
 
     public static void main(String[] args) {
+        // the program prints the number of numbers that were inside the given range.
         Scanner scanner = new Scanner(System.in);
          int counter =0;
                  
-        System.out.println("File? ");
+        System.out.println("File? "); // two files: numbers-1.txt and numbers-2.txt 
         String file = scanner.nextLine();
         System.out.println("Lower bound? ");
         int lowerBound = Integer.valueOf(scanner.nextLine());

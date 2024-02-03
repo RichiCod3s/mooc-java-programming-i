@@ -9,6 +9,7 @@ public class PrintingASpecifiedFile {
         
         String fileName;
         
+        //file name: data.txt
         System.out.println("Which file should have its contents printed?");
         
         fileName = scanner.nextLine();

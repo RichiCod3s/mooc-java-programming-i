@@ -17,24 +17,24 @@ public class RecipeSearch {
 
     public void commands() {
         Scanner scanner = new Scanner(System.in);
-        //System.out.println("File to read:");
-        // String fileName = scanner.nextLine();
+        System.out.println("File to read:");
+        String fileName = scanner.nextLine();
 
         while (true) {
             System.out.println("Enter command:");
             String command = scanner.nextLine();
             switch (command) {
                 case "list":
-                    listRecipes("recipes.txt");// change later to fileName
+                    listRecipes(fileName);// change later to fileName
                     break;
                 case "find name":
-                    findName("recipes.txt");
+                    findName(fileName);
                     break;
                 case "find cooking time":
-                    findCookingTime("recipes.txt");
+                    findCookingTime(fileName);
                     break;
                 case "find ingredient":
-                    findIngredient("recipes.txt");
+                    findIngredient(fileName);
                     break;
                 case "stop":
                     return;
@@ -141,32 +141,22 @@ public class RecipeSearch {
 
         try (Scanner scan = new Scanner(Paths.get(fileName))) {
             // take from first two lines as per file format
+
             String recipe = scan.nextLine();
             int time = Integer.valueOf(scan.nextLine());
             // print recipe
             System.out.println("Recipe:");
-            // after the first two lines, run through the lines up to where there is no empty lines
-            // as per the txt file format
-            while (!(scan.nextLine().isEmpty())) {
+            while (scan.hasNextLine()) {
                 String ingredient = scan.nextLine();
                 if (ingredient.equals(ingredientWanted)) {
                     System.out.println(recipe + ", cooking time: " + time);
                 }
-            }
-
-            while (scan.hasNextLine()) {
-                // if line is empty take from first two lines
-                if (scan.nextLine().isEmpty()) {
+               // if the line thats being read is empty the next two lines are the recipe name and time 
+                if (ingredient.isEmpty()) { 
                     recipe = scan.nextLine();
                     time = Integer.valueOf(scan.nextLine());
-                    // if the recipe contains the searched for word, print it out
-                    while (!(scan.nextLine().isEmpty())) {
-                        String ingredient = scan.nextLine();
-                        if (ingredient.equals(ingredientWanted)) {
-                            System.out.println(recipe + ", cooking time: " + time);
-                        }
-                    }
                 }
+
             }
         } catch (Exception e) {
             System.out.println("Reading the file " + fileName + " failed.");

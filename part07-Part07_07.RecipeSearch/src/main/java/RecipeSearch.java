@@ -1,40 +1,44 @@
-
-import java.io.File;
-import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.ArrayList;
 import java.nio.file.Paths;
+import java.nio.file.Path;
+import java.util.List;
 
 public class RecipeSearch {
 
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        RecipeSearch recipeSearch = new RecipeSearch();
+    private ArrayList<Recipe> recipes;
+    private Scanner scanner;
 
-        recipeSearch.commands();
-
+    public RecipeSearch() {
+        this.recipes = new ArrayList<>();
+        this.scanner = new Scanner(System.in);
     }
-    Scanner scanner = new Scanner(System.in);
+
+    public static void main(String[] args) {
+        RecipeSearch recipeSearch = new RecipeSearch();
+        recipeSearch.commands();
+    }
 
     public void commands() {
-        Scanner scanner = new Scanner(System.in);
         System.out.println("File to read:");
         String fileName = scanner.nextLine();
+        readRecipesFromFile(fileName);
 
         while (true) {
             System.out.println("Enter command:");
             String command = scanner.nextLine();
             switch (command) {
                 case "list":
-                    listRecipes(fileName);// change later to fileName
+                    listRecipes();
                     break;
                 case "find name":
-                    findName(fileName);
+                    findName();
                     break;
                 case "find cooking time":
-                    findCookingTime(fileName);
+                    findCookingTime();
                     break;
                 case "find ingredient":
-                    findIngredient(fileName);
+                    findIngredient();
                     break;
                 case "stop":
                     return;
@@ -42,126 +46,75 @@ public class RecipeSearch {
         }
     }
 
-    public void listRecipes(String fileName) {
-        try (Scanner scan = new Scanner(Paths.get(fileName))) {
+private void readRecipesFromFile(String fileName) {
+    try (Scanner fileScanner = new Scanner(Paths.get(fileName))) {
+        // Iterate over each line in the file until there are no more lines
+        while (fileScanner.hasNextLine()) {
+            // Read the recipe name from the current line
+            String recipeName = fileScanner.nextLine();
+            // Read the cooking time from the next line and convert it to an integer
+            int cookingTime = Integer.parseInt(fileScanner.nextLine());
+            
+            // Create a new Recipe object with the name and cooking time
+            Recipe recipe = new Recipe(recipeName, cookingTime);
 
-            // take from first two lines as per file format
-            String recipe = scan.nextLine();
-            int time = Integer.valueOf(scan.nextLine());
-            // print recipe
-            System.out.println("Recipe:");
-            System.out.println(recipe + ", cooking time: " + time);
-
-            while (scan.hasNextLine()) {
-
-                // if line is empty take from first two lines
-                if (scan.nextLine().isEmpty()) {
-                    recipe = scan.nextLine();
-                    time = Integer.valueOf(scan.nextLine());
-                    // print recipes
-                    System.out.println(recipe + ", cooking time: " + time);
-
-                }
+            // Read each ingredient until an empty line or the end of the file
+            String line;
+            while (fileScanner.hasNextLine() && !(line = fileScanner.nextLine()).isEmpty()) {
+                // Add the ingredient to the Recipe object
+                recipe.addIngredient(line);
             }
-        } catch (Exception e) {
-            System.out.println("Reading the file " + fileName + " failed.");
-        }
 
+            // Add the Recipe object to the list of recipes
+            recipes.add(recipe);
+        }
+    } catch (Exception e) {
+        System.out.println("Reading the file " + fileName + " failed.");
+    }
+}
+
+
+    public void listRecipes() {
+        System.out.println("Recipes:");
+        for (Recipe recipe : recipes) {
+            System.out.println(recipe);
+        }
     }
 
-    public void findName(String fileName) {
-
+    public void findName() {
         System.out.println("Searched word:");
         String searchedWord = scanner.nextLine();
 
-        try (Scanner scan = new Scanner(Paths.get(fileName))) {
-            // take from first two lines as per file format
-            String recipe = scan.nextLine();
-            int time = Integer.valueOf(scan.nextLine());
-            // print recipe
-            System.out.println("Recipe:");
-            // if the recipe contains the searched for word, print it out
-            if (recipe.contains(searchedWord)) {// case sensitive
-
-                System.out.println(recipe + ", cooking time: " + time);
+        System.out.println("Recipes:");
+        for (Recipe recipe : recipes) {
+            if (recipe.getName().contains(searchedWord)) {
+                System.out.println(recipe);
             }
-
-            while (scan.hasNextLine()) {
-                // if line is empty take from first two lines
-                if (scan.nextLine().isEmpty()) {
-                    recipe = scan.nextLine();
-                    time = Integer.valueOf(scan.nextLine());
-                    // if the recipe contains the searched for word, print it out
-                    if (recipe.contains(searchedWord)) {
-                        System.out.println(recipe + ", cooking time: " + time);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("Reading the file " + fileName + " failed.");
         }
-
     }
 
-    public void findCookingTime(String fileName) {
+    public void findCookingTime() {
         System.out.println("Max cooking time:");
         int maxTime = scanner.nextInt();
+        scanner.nextLine(); // consume newline
 
-        try (Scanner scan = new Scanner(Paths.get(fileName))) {
-            // take from first two lines as per file format
-            String recipe = scan.nextLine();
-            int time = Integer.valueOf(scan.nextLine());
-            // print recipe
-            System.out.println("Recipe:");
-            // if the time in recipe is <= to maxTime input
-            if (time <= maxTime) {
-                System.out.println(recipe + ", cooking time: " + time);
+        System.out.println("Recipes:");
+        for (Recipe recipe : recipes) {
+            if (recipe.getCookingTime() <= maxTime) {
+                System.out.println(recipe);
             }
-
-            while (scan.hasNextLine()) {
-                // if line is empty take from first two lines
-                if (scan.nextLine().isEmpty()) {
-                    recipe = scan.nextLine();
-                    time = Integer.valueOf(scan.nextLine());
-                    // if the time in recipe is <= to maxTime input
-                    if (time <= maxTime) {
-                        System.out.println(recipe + ", cooking time: " + time);
-                    }
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("Reading the file " + fileName + " failed.");
         }
-
     }
 
-    public void findIngredient(String fileName) {
-        System.out.println("Ingredient");
+    public void findIngredient() {
+        System.out.println("Ingredient:");
         String ingredientWanted = scanner.nextLine();
 
-        try (Scanner scan = new Scanner(Paths.get(fileName))) {
-            // take from first two lines as per file format
-
-            String recipe = scan.nextLine();
-            int time = Integer.valueOf(scan.nextLine());
-            // print recipe
-            System.out.println("Recipe:");
-            while (scan.hasNextLine()) {
-                String ingredient = scan.nextLine();
-                if (ingredient.equals(ingredientWanted)) {
-                    System.out.println(recipe + ", cooking time: " + time);
-                }
-               // if the line thats being read is empty the next two lines are the recipe name and time 
-                if (ingredient.isEmpty()) { 
-                    recipe = scan.nextLine();
-                    time = Integer.valueOf(scan.nextLine());
-                }
-
+        System.out.println("Recipes:");
+        for (Recipe recipe : recipes) {
+            if (recipe.getIngredients().contains(ingredientWanted)) {
+                System.out.println(recipe);
             }
-        } catch (Exception e) {
-            System.out.println("Reading the file " + fileName + " failed.");
         }
-
     }
-
-}// class
+}
